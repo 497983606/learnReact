@@ -1,0 +1,45 @@
+.members{
+  width: 100%;
+  ._title, ._detail ul ol{
+    width: 100%;
+    border-bottom: 2px solid #eee;
+    padding: 8px 0;
+    li{
+      display: inline-block;
+      width: 120px;
+      margin-left: 10px;
+    }
+  }
+  ._title{
+    text-transform:capitalize;
+    color: rgb(168, 168, 168);
+    position: relative;
+    .semi-button{
+      position: absolute;
+      right: 10px;
+      top: -32px;
+    }
+  }
+  ._detail ul ol{
+    border-bottom-width: 1px;
+    position: relative;
+    .btns{
+      position: absolute;
+      right: 10px;
+      top: 6px;
+      display: none;
+      .semi-button{
+        margin-left: 10px;
+      }
+    }
+    &:nth-last-child(1){
+      border: none;
+    }
+    &:hover{
+      background-color: #eee;
+      .btns{
+        display: block;
+      }
+    }
+  }
+}
