@@ -110,6 +110,7 @@ const useApiHooks = () => {
       let item = orgs.find(i => i.id === id)
       let itemChild = orgs.find(i => i.parent === id)
       if( item && itemChild) itemChild.parent = item.parent
+      if( item ) item.members.map((i: string) => handleDelete( 'member', i, users, orgs))
     }
     if(type === 'member'){
       orgs.forEach(i => {
@@ -160,7 +161,6 @@ const useApiHooks = () => {
       item.name = name
       item.parent = parent
     }
-    
     return orgs
   }
 
