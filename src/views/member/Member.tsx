@@ -90,7 +90,7 @@ const Member = ({ members, setData, treeData} : UserProps, ref: any) => {
                 </li>
                 <span className="btns">
                   <Button size="small" type="danger" onClick={() => handleDelete(id, name)}>Delete</Button>
-                  <Button size="small" onClick={() => visiableDialog({ id, name, age, status })}>Edit</Button>
+                  <Button size="small" onClick={() => visiableDialog({ id, name, age, org: treeData.id, status })}>Edit</Button>
                 </span>
               </ol>
             })
