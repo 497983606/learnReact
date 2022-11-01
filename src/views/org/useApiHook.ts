@@ -1,13 +1,7 @@
 import { useState, useEffect } from 'react'
 import { UserItem, OrgItem, OrgObj, setParams} from '../../typing'
-import axios from 'axios'
 
 const useApiHooks = () => {
-
-  // make a axios instance
-  const http = axios.create({
-    headers:{ 'Content-Type':'application/json;charset=UTF-8' }
-  })
 
   // use tree data, because inerface OrgProps is recursive, so need Partial to change
   const [orgTree, setOrgTree] = useState< OrgItem[] >([])
@@ -38,37 +32,19 @@ const useApiHooks = () => {
   }
 
   // fetch member and org data from json || locstorge
-  const fetchData = async (): Promise<void> => {
-    let res = await Promise.all([
-      await http.get('./data/orgs.json'),
-      await http.get('./data/members.json')
-    ])
-    if(res.every(i => i.status === 200)){
-      res[0].data.map((i: OrgItem) => {
-        i.members = i.members || []
-        i.parent === null && (i.parent = "null")
-      })
-
-      setMembers( res[1].data )
-      setOrgList( res[0].data )
-
-      localStorage.removeItem('data')
-    }
+  const fetchData = async (): Promise<any> => {
+        return Promise.all([ fetch('./data/orgs.json'), fetch('./data/members.json') ])
+              .then(res => Promise.all([res[0].json(), res[1].json()] ))
+              .then(res => {
+                res[0].map((i: OrgItem) => {
+                  i.members = i.members || []
+                  i.parent === null && (i.parent = "null")
+                })
+                setOrgList( res[0] )
+                setMembers( res[1] )
+                localStorage.removeItem('data')
+              })
   }
-  
-  // fetch and handle data acceptable for "OrgProps"
-  useEffect(() => {
-    let data = localStorage.getItem('data')
-    if(!data) fetchData()
-    try{
-      if(!data) throw 'data is not a json string'
-      let res = JSON.parse(data)
-      setMembers( res.members )
-      setOrgList( res.orgList )
-    }catch(err){
-      fetchData()
-    }
-  }, [])
 
   // watch orgList to render tree
   useEffect(() => setOrgTree( list2Tree(orgList) ), [orgList])
@@ -194,6 +170,8 @@ const useApiHooks = () => {
     orgTree,
     members,
     orgList,
+    setMembers,
+    setOrgList,
     setData,
     fetchData,
     saveDataToLocalStorage
